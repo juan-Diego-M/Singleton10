@@ -1,14 +1,14 @@
 public class DatabaseConnection {
-    // Capacidad máxima del "multiton" (pool)
+   
     private static final int MAX_INSTANCES = 10;
     private static final DatabaseConnection[] POOL = new DatabaseConnection[MAX_INSTANCES];
-    private static int nextIndex = 0; // para round-robin cuando el pool está lleno
+    private static int nextIndex = 0; 
 
     private String host;
     private String user;
     private String pass;
     private String name;
-    private static int uniqueIdentificator = 0; // cuenta cuántas instancias se han creado
+    private static int uniqueIdentificator = 0;
 
     private DatabaseConnection(String host, String user, String pass, String name) {
         this.host = host;
@@ -18,8 +18,7 @@ public class DatabaseConnection {
         uniqueIdentificator++;
     }
 
-    // Devuelve una conexión existente con los mismos parámetros
-    // o crea una nueva hasta un máximo de 10. Si está lleno, reutiliza por round-robin.
+
     public static synchronized DatabaseConnection getDatabaseConnection(String host, String user, String pass, String name) {
         // 1) Si ya existe una instancia con los mismos datos, regresála
         for (DatabaseConnection db : POOL) {
@@ -32,7 +31,7 @@ public class DatabaseConnection {
             }
         }
 
-        // 2) Si hay espacio libre, crea una nueva
+        
         for (int i = 0; i < MAX_INSTANCES; i++) {
             if (POOL[i] == null) {
                 POOL[i] = new DatabaseConnection(host, user, pass, name);
@@ -41,7 +40,7 @@ public class DatabaseConnection {
             }
         }
 
-        // 3) Si el pool está lleno, reutiliza (round-robin)
+        //  está lleno, reutiliza 
         DatabaseConnection reused = POOL[nextIndex];
         nextIndex = (nextIndex + 1) % MAX_INSTANCES;
         return reused;
@@ -51,7 +50,7 @@ public class DatabaseConnection {
         return uniqueIdentificator;
     }
 
-    // Getters opcionales para host, user, pass, name
+
     public String getHost() { return host; }
     public String getUser() { return user; }
     public String getPass() { return pass; }
